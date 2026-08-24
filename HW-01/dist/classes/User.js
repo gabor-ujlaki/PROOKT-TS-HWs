@@ -5,11 +5,14 @@ class User {
     constructor(userId, name, email) {
         this._userId = userId;
         this._name = name;
+        this.email = email;
+        console.log(`Felhasználó létrehozva: [${this._userId}] ${this._name}`);
+    }
+    set email(email) {
         if (!/^.+@.+\.[a-zA-Z]{2,3}$/.test(email.trim())) {
-            throw new Error(`Sikertelen felhasználó létrehozás: Érvénytelen e-mail cím formátum: "${email}"`);
+            throw new Error(`Sikertelen művelet: Érvénytelen e-mail cím formátum: "${email}"`);
         }
         this._email = email;
-        console.log(`Felhasználó létrehozva: [${this._userId}] ${this._name}`);
     }
     borrowBook(library, bookId) {
         const book = library.findBookById(bookId);

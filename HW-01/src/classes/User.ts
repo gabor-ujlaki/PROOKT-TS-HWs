@@ -3,17 +3,21 @@ import { Library } from './Library';
 export class User {
     private _userId: string;
     private _name: string;
-    private _email: string;
+    private _email!: string;
 
     constructor(userId: string, name: string, email: string) {
         this._userId = userId;
         this._name = name;
+        this.email = email;
 
+        console.log(`Felhasználó létrehozva: [${this._userId}] ${this._name}`);
+    }
+
+    public set email(email: string) {
         if (!/^.+@.+\.[a-zA-Z]{2,3}$/.test(email.trim())) {
-            throw new Error(`Sikertelen felhasználó létrehozás: Érvénytelen e-mail cím formátum: "${email}"`);
+            throw new Error(`Sikertelen művelet: Érvénytelen e-mail cím formátum: "${email}"`);
         }
         this._email = email;
-        console.log(`Felhasználó létrehozva: [${this._userId}] ${this._name}`);
     }
 
     public borrowBook(library: Library, bookId: string): void {
