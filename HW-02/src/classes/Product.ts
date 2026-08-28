@@ -21,7 +21,7 @@ export class Product extends GUID {
         this.id = id;
         this.name = name;
         this.price = price;
-         this.currency = currency;
+        this.currency = currency;
         this.description = description;
     }
 
