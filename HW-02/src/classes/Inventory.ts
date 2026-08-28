@@ -50,12 +50,23 @@ export class Inventory {
         }
     }
 
+    public hasEnoughStock(productId: string, requestedAmount: number): boolean {
+        const item = this.findItemById(productId);
+        if (item !== null) {
+            return item.quantity >= requestedAmount;
+        }
+        return false;
+    }
+
+    public getAvailableQuantity(productId: string): number {
+        const item = this.findItemById(productId);
+        return item !== null ? item.quantity : 0;
+    }
+
     public findProduct(searchKey: string): Product | null {
         for (const item of this.items) {
             if (item.product.id === searchKey || item.product.name === searchKey) {
-                if (item.quantity > 0) {
-                    return item.product;
-                }
+                 return item.product;
             }
         }
         return null;
