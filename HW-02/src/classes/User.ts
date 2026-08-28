@@ -14,19 +14,19 @@ export class User {
     }
 
     public placeOrder(orderId: string, cart: { productId: string, qty: number }[], inventory: Inventory): Order | null {
-        console.log(`\n[User] ${this.name} rendelést indít...`);
+        console.log(`\n[User] ${this.userId} ${this.name} felhasználó rendelése folamatban...`);
         
         for (const item of cart) {
             const product = inventory.findProduct(item.productId);
             
             if (product === null) {
-                console.error(`[User] Ismeretlen termék ID: ${item.productId}`);
+                console.error(`\n[User] Ismeretlen termék ID: ${item.productId}`);
                 return null;
             }
 
             if (!inventory.hasEnoughStock(item.productId, item.qty)) {
                 const available = inventory.getAvailableQuantity(item.productId);
-                console.warn(`[User] A rendelés nem teljesíthető!\n\tID: ${product.id} ${product.name} | Rendelt mennyiség: ${item.qty} DB | Készleten: ${available} DB.\n\tIndítson új rendelést legfeljebb a készlet erejéig!`);
+                console.warn(`\n[User] A rendelés nem teljesíthető!\n\tID: ${product.id} ${product.name} | Rendelt mennyiség: ${item.qty} DB | Készleten: ${available} DB.\n\tIndítson új rendelést legfeljebb a készlet erejéig!`);
                 return null;
             }
         }
@@ -43,7 +43,7 @@ export class User {
         }
 
         const newOrder = new Order(orderId, selectedProducts);
-        console.log(`[User] A rendelés (${orderId}) sikeresen létrehozva!`);
+        console.log(`\n[User] A rendelés (${orderId}) sikeresen létrehozva!`);
         return newOrder;
     }
 }
