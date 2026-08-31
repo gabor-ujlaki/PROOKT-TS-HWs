@@ -1,5 +1,6 @@
 import { Currency, UoM } from './interfaces/IBaseProduct'
 import { Product } from './classes/Product';
+import { Inventory } from './classes/Inventory';
 
 /* TESZT */
 const prod1= new Product('PROD001', 'TV', 150000, Currency.HUF, UoM.DB);
@@ -11,3 +12,6 @@ prod1.price = 200000;
 prod1.description = 'színes televízió';
 console.log('product details:', prod1.getProductDetails());
 prod1.printProduct();
+
+const wh1 = new Inventory('WH001', 'Raktár 01');
+wh1.assignItem({product: prod1, qty: 2});

@@ -1,92 +1,111 @@
-import { Product } from "./Product";
+import { Product } from './Product';
+import { IInventory, IInventoryItem } from '../interfaces/IBaseInventory';
 
-export class InventoryItem {
-    public product: Product;
-    public quantity: number;
+export class Inventory implements IInventory {
+    private _id: string;
+    private name: string;
+    private items: IInventoryItem[];
 
-    constructor(product: Product, quantity: number = 0) {
-        this.product = product;
-        this.quantity = quantity;
-    }
-}
-
-export class Inventory {
-    
-    private items: InventoryItem[];
-
-    constructor() {
+    constructor(id: string, name: string) {
+        this._id = id;
+        this.name = name;
         this.items = [];
     }
 
-    public registerProduct(product: Product): void {
-        if (this.findItemById(product.id) === null) {
-            this.items.push(new InventoryItem(product, 0));
-            console.log(`[Inventory] Új ${product.id} ${product.name} termék létrehozva.`);
+    public get id():string {
+        return this._id;
+    }
+
+    private findItemById(id: string): IInventoryItem | undefined {
+        return this.items.find(item => item.product.id === id);
+    }
+    
+    public assignItem(inventoryItem: IInventoryItem): void {
+        const existingItem = this.findItemById(inventoryItem.product.id);
+
+        if (existingItem) {
+            console.warn(`\nA ${inventoryItem.product.id} termék már szerepel a készlet listában!`);
+            return;
         }
+
+        this.items.push(inventoryItem);
+        console.log(`\nA ${inventoryItem.product.id} termék hozzáadva a készlet listához.`)
     }
 
-    public increaseStock(productId: string, amount: number): void {
-        const item = this.findItemById(productId);
-        if (item !== null) {
-            item.quantity += amount;
-            console.log(`[Inventory] ${productId} ${item.product.name} árubeérkezés +${amount} DB.\nÚj készlet: ${item.quantity} DB`);
-        } else {
-            console.error(`[Inventory] Ismeretlen termék ID: ${productId}`);
+    public addItemQty(product: Product, qty: number): void {
+        const existingItem = this.findItemById(product.id);
+
+        if (qty === 0) {
+            console.warn('\nAz árubeérkezés nem lehet nulla!');
+            return;
         }
-    }
 
-    public decreaseStock(productId: string, amount: number): void {
-        const item = this.findItemById(productId);
-        if (item !== null) {
-            if (item.quantity - amount < 0) {
-                console.warn(`[Inventory] Nincs elég készlet: ${productId} ${item.product.name}.\nAktuális készlet: ${item.quantity} DB.`);
-                item.quantity = 0;
-            } else {
-                item.quantity -= amount;
-                console.log(`[Inventory] ${productId} ${item.product.name} árukiadás -${amount} DB.\nÚj készlet: ${item.quantity} DB`);
-            }
-        } else {
-            console.error(`[Inventory] Ismeretlen termék ID: ${productId}`);
+        if (!existingItem) {
+            console.warn(`\nA ${product.id} termék még nem szerepel a készlet istában!`);
+            return;
         }
+            
+        existingItem.qty += qty;
+        const detail = product.getProductDetails();
+        console.log(`\nAz árubeérkezés megtörtént. [${product.id}: ${existingItem.qty} ${detail.uom}]`);
     }
 
-    public hasEnoughStock(productId: string, requestedAmount: number): boolean {
-        const item = this.findItemById(productId);
-        if (item !== null) {
-            return item.quantity >= requestedAmount;
+    public substItemQty(product: Product, qty: number): void {
+        const existingItem = this.findItemById(product.id);
+
+        if (qty === 0) {
+            console.warn('\nAz árubeérkezés nem lehet nulla!');
+            return;
         }
-        return false;
+
+        if (!existingItem) {
+            console.warn(`\nA ${product.id} termék még nem szerepel a készlet istában!`);
+            return;
+        }
+
+        if (existingItem.qty - qty < 0) {
+            const detail = product.getProductDetails();
+            console.warn(`\nAz árukiadás csak a készlet erejéig történhet meg! [${product.id} = ${existingItem.qty} ${detail.uom}]`);
+            return;
+        }
+
+        existingItem.qty -= qty;
+        const detail = product.getProductDetails();
+        console.log(`\nAz árukiadás megtörtént. [${product.id}: ${existingItem.qty} ${detail.uom}]`);
     }
 
-    public getAvailableQuantity(productId: string): number {
-        const item = this.findItemById(productId);
-        return item !== null ? item.quantity : 0;
+    public removeItem(productId: string): void {
+        const existingItem = this.findItemById(productId);
+
+        if (!existingItem) {
+            console.warn(`\nA ${productId} termék nem szerepel a készlet listában!`);
+            return;
+        }
+
+        const detail = existingItem.product.getProductDetails();
+        if (existingItem.qty > 0) {
+            console.warn(`\nA ${productId} terméknek nem nulla a készlete! [${existingItem.qty} ${detail.uom}]`);
+            return;
+        }
+
+        this.items = this.items.filter(item => item.product.id !== productId);
+        console.log(`\nA ${productId} termék törlése megtörtént.`);
     }
 
-    public findProduct(searchKey: string): Product | null {
+    public printStock(): void {
+        console.log(`\n${'-'.repeat(60)}`);
+        console.log(`\n${'-'.repeat(20)} ${this._id} ${this.name} ${'-'.repeat(20)}`);
+        console.log(`\n${'-'.repeat(60)}`);
+
+        if (this.items.length === 0) {
+            console.log(`A raktár üres.`);
+            return;
+        }
+
         for (const item of this.items) {
-            if (item.product.id === searchKey || item.product.name === searchKey) {
-                 return item.product;
-            }
+            const detail = item.product.getProductDetails();
+            console.log(`ID: ${item.product.id}} | Név: ${detail.name}} | Egys.Ár: ${item.product.price} ${detail.currency} | Készlet: ${item.qty} ${detail.uom} | Össz.Ért.: ${item.qty * item.product.price} ${detail.currency}`);
         }
-        return null;
-    }
-
-    private findItemById(id: string): InventoryItem | null {
-        for (const item of this.items) {
-            if (item.product.id === id) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    public listAllProducts(): void {
-        console.log(`\n${'-'.repeat(30)} Raktárkészlet ${'-'.repeat(30)}`)
-        for (const item of this.items) {
-            console.log(`ID: ${item.product.id} | Név: ${item.product.name} | Ár: ${item.product.price} ${item.product.currency} | Készlet: ${item.quantity} DB`);
-        }
-        console.log(`\n${'-'.repeat(75)}`);
-    }
+        console.log(`\n${'-'.repeat(60)}`);
+   }
 }
-
