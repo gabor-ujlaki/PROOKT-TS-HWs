@@ -7,7 +7,7 @@ export interface IInventoryItem {
 
 export interface IInventory {
     readonly id: string;
-    assignItem(inventoryItem: IInventoryItem): void;
+    assignItem(product: Product): void;
     addItemQty(product: Product, qty: number): void;
     substItemQty(product: Product, qty: number): void;
     removeItem(productId: string): void;

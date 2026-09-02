@@ -1,3 +1,4 @@
+import { Currency } from '../interfaces/IBaseProduct';
 import { Product } from './Product';
 import { IInventory, IInventoryItem } from '../interfaces/IBaseInventory';
 
@@ -20,16 +21,16 @@ export class Inventory implements IInventory {
         return this.items.find(item => item.product.id === id);
     }
     
-    public assignItem(inventoryItem: IInventoryItem): void {
-        const existingItem = this.findItemById(inventoryItem.product.id);
+    public assignItem(product: Product): void {
+        const existingItem = this.findItemById(product.id);
 
         if (existingItem) {
-            console.warn(`\nA ${inventoryItem.product.id} termék már szerepel a készlet listában!`);
+            console.warn(`\nA ${product.id} termék már szerepel a készlet listában!`);
             return;
         }
 
-        this.items.push(inventoryItem);
-        console.log(`\nA ${inventoryItem.product.id} termék hozzáadva a készlet listához.`)
+        this.items.push({product: product, qty: 0});
+        console.log(`\nA ${product.id} termék hozzáadva a készlet listához.`)
     }
 
     public addItemQty(product: Product, qty: number): void {
@@ -92,10 +93,19 @@ export class Inventory implements IInventory {
         console.log(`\nA ${productId} termék törlése megtörtént.`);
     }
 
+    private printStockItem(inventoryItem: IInventoryItem): void {
+        const detail = inventoryItem.product.getProductDetails();
+        console.log(`ID: ${detail.id} | Név: ${detail.name} | Egys.Ár: ${detail.price.toLocaleString('hu-HU')} ${detail.currency} | Készlet: ${inventoryItem.qty.toLocaleString('hu-HU')} ${detail.uom} | Össz.Ért.: ${(inventoryItem.qty * detail.price).toLocaleString('hu-HU')} ${detail.currency}`);
+    
+    }
     public printStock(): void {
-        console.log(`\n${'-'.repeat(60)}`);
-        console.log(`\n${'-'.repeat(20)} ${this._id} ${this.name} ${'-'.repeat(20)}`);
-        console.log(`\n${'-'.repeat(60)}`);
+        const title = `${this._id} ${this.name}`;
+        const line = 60;
+        const indent = (line - title.length - 2) / 2;
+
+        console.log(`\n${'='.repeat(line)}`);
+        console.log(`${'*'.repeat(indent)} ${title} ${'*'.repeat(indent)}`);
+        console.log(`${'='.repeat(line)}`);
 
         if (this.items.length === 0) {
             console.log(`A raktár üres.`);
@@ -103,9 +113,18 @@ export class Inventory implements IInventory {
         }
 
         for (const item of this.items) {
-            const detail = item.product.getProductDetails();
-            console.log(`ID: ${item.product.id}} | Név: ${detail.name}} | Egys.Ár: ${item.product.price} ${detail.currency} | Készlet: ${item.qty} ${detail.uom} | Össz.Ért.: ${item.qty * item.product.price} ${detail.currency}`);
+            this.printStockItem(item);
         }
-        console.log(`\n${'-'.repeat(60)}`);
+
+        console.log(`${'-'.repeat(line)}`);
+
+        console.log('Total:');
+        for (const curr of Object.values(Currency)) {
+            if (this.items.find(item => item.product.currency === curr)) {
+                const val = this.items.filter(item => item.product.currency === curr).map(item => item.qty * item.product.price).reduce((acc, val) => acc + val, 0);
+                console.log(`(${curr}): ${val.toLocaleString('hu-HU')} ${curr}`);
+            }
+        }
+        console.log(`${'='.repeat(line)}`);
    }
 }
