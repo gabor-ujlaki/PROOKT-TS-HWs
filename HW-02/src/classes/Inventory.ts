@@ -93,6 +93,26 @@ export class Inventory implements IInventory {
         console.log(`\nA ${productId} termék törlése megtörtént.`);
     }
 
+    public searchStockItem(searchKey: string): void {
+        const existingItem = this.findItemById(searchKey);
+        
+        if (existingItem) {
+            this.printStockItem(existingItem);
+            return;
+        }
+
+        const existingItems = this.items.filter(item => new RegExp(searchKey, 'i').test(item.product.name));
+
+        if(existingItems.length === 0) {
+            console.warn('\nNincs a keresési feltételnek megfelelő tétel!');
+            return;
+        }
+
+        for (const item of existingItems) {
+            this.printStockItem(item);
+        }
+    }
+
     private printStockItem(inventoryItem: IInventoryItem): void {
         const detail = inventoryItem.product.getProductDetails();
         console.log(`ID: ${detail.id} | Név: ${detail.name} | Egys.Ár: ${detail.price.toLocaleString('hu-HU')} ${detail.currency} | Készlet: ${inventoryItem.qty.toLocaleString('hu-HU')} ${detail.uom} | Össz.Ért.: ${(inventoryItem.qty * detail.price).toLocaleString('hu-HU')} ${detail.currency}`);
