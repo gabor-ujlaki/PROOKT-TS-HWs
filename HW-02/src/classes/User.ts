@@ -46,7 +46,8 @@ export class User implements IUser {
     }
 
     public myOrders(): void {
-        console.log(`\n${this._id} (${this._name}) rendelései:`);
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`${this._id} (${this._name}) rendelései:`);
 
         if (this.orders.length === 0) {
             console.log('Nincs még rendelés.');
@@ -54,10 +55,12 @@ export class User implements IUser {
         }
 
         for (const order of this.orders) {
-            console.log("----------------------------------------");
-            console.log(`Rendelés ID: ${order.id}`);
-            console.log(`Státusz: ${order.status}`);
+            const labelWidth = 20;
+            console.log(`${'-'.repeat(60)}`);
+            console.log(`*** ${'Rendelés ID:'.padEnd(labelWidth)}${order.id}`);
+            console.log(`*** ${'Státusz:'.padEnd(labelWidth)}${order.status}`);
             console.log('Tételek:');
+            console.log(`${'-'.repeat(60)}`);
 
             if ((order as any).items.length === 0) {
                 console.log('  (üres rendelés)');
@@ -65,12 +68,12 @@ export class User implements IUser {
                 for (const item of (order as any).items) {
                     const detail = item.product.getProductDetails();
                     console.log(
-                        `  - ${detail.name} (${detail.id}) | ${item.qty} ${detail.uom} | ${detail.price} ${detail.currency}`
+                        `${detail.name} (${detail.id}) | ${item.qty.toLocaleString('hu-HU')} ${detail.uom} | ${detail.price.toLocaleString('hu-HU')} ${detail.currency} | Összeg: ${(item.qty * detail.price).toLocaleString('hu-HU')} ${detail.currency}`
                     );
                 }
             }
         }
 
-        console.log("----------------------------------------");
+        console.log(`${'='.repeat(60)}`);
     }
 }
