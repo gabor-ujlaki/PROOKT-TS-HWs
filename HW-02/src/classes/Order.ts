@@ -99,6 +99,6 @@ export class Order implements IOrder {
             );
         }
 
-        console.log(`\n${'='.repeat(60)}`);
+        console.log(`${'='.repeat(60)}`);
     }
 }
