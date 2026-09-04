@@ -19,9 +19,10 @@ module.exports = {
       tsconfig: 'tsconfig.jest.json'
     }
   },
-  testMatch: [
-    '<rootDir>/HW-01/**/*.test.ts',
-    '<rootDir>/HW-02/**/*.test.ts',
-    '<rootDir>/HW-03/**/*.test.ts'
-  ]
+testMatch: [
+  '<rootDir>/HW-01/src/tests/**/*.test.ts',
+  '<rootDir>/HW-02/src/tests/**/*.test.ts',
+  '<rootDir>/HW-03/src/tests/**/*.test.ts'
+]
+
 };
