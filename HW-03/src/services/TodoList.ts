@@ -24,7 +24,7 @@ export class TodoList<T extends TodoContent> implements ITodoList<T> {
         }
 
         this.items.delete(id);
-        console.log(`A ${id} teendő törölve.`);
+        console.log(`\nA ${id} teendő törölve.`);
     }
 
     public list(): void {
