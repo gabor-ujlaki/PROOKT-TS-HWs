@@ -1,0 +1,24 @@
+{
+  "name": "prookt-ts-hws",
+  "version": "1.0.0",
+  "description": "[1] [HW-01](https://github.com/gabor-ujlaki/PROOKT-TS-HWs/tree/main/HW-01/)  \r [2] [HW-02](https://github.com/gabor-ujlaki/PROOKT-TS-HWs/tree/main/HW-02/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabor-ujlaki/PROOKT-TS-HWs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gabor-ujlaki/PROOKT-TS-HWs/issues"
+  },
+  "homepage": "https://github.com/gabor-ujlaki/PROOKT-TS-HWs#readme",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
