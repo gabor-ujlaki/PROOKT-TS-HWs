@@ -14,7 +14,7 @@ export class TodoList<T extends TodoContent> implements ITodoList<T> {
         }
 
         this.items.set(item.id, item);
-        console.log(`A ${item.id} teendő hozzáadva a listához.`);
+        console.log(`\nA ${item.id} teendő hozzáadva a listához.`);
     }
 
     public remove(id: string): void {

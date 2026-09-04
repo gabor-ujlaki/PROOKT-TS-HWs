@@ -2,7 +2,7 @@ export function LogAdd(target: Object, propertyKey: string, descriptor: Property
     const original = descriptor.value;
 
     descriptor.value = function (...args: any[]) {
-        console.log(`\n[LOG] Új teendő hozzáadva:`, args[0]);
+        console.log(`\n[LOG] Teendő hozzáadva:`, args[0]);
         return original.apply(this, args);
     };
 
