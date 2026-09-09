@@ -30,7 +30,7 @@ export class Borrower implements IBaseBorrower {
     public set mail(newMail: string) {
         this._mail = newMail;
     }
-    
+
     private constructor(id: string, name: string, mail: string) {
         this._id = id;
         this._name = name;
@@ -43,5 +43,12 @@ export class Borrower implements IBaseBorrower {
         return new Borrower(id, name, mail);
     }
 
+    public addBorrowedBook(book: Book): void {
+        this.borrowedBooks.add(book);
+    }
+
+    public removeBorrowedBook(book: Book): void {
+        this.borrowedBooks.delete(book);
+    }
 
 }
