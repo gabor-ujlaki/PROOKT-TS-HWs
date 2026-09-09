@@ -68,10 +68,15 @@ export class Book implements IBaseBook {
 
     @LogAction('Könyv törlése')
     public static destroyBook(book: Book): void {
-        //kidolgozni
+                if (Book.registry.has(book)) {
+            Book.registry.delete(book);
+            console.log(`A ${book.id} könyv törölve a globális regisztrációból.`);
+        } else {
+            console.warn('A könyv már nincs a regisztrálva!');
+        }
     }
 
     public print(): void {
-        //kidolgozni
+        console.log(`ID: ${this._id} | Cím: ${this._title} | Szerző: ${this._author} | Státusz: ${this._status}`);
     }
 }

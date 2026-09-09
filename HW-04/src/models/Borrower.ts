@@ -53,11 +53,30 @@ export class Borrower implements IBaseBorrower {
 
     @LogAction('Felhasználó törlése')
     public static destroyUser(user: Borrower): void {
-        //kidolgozni
+        const hasBorrowed = [...user.borrowedBooks].some(book => book.status === BookStatus.BORROWED);
+
+        if (hasBorrowed) {
+            console.warn(
+                `A felhasználó nem törölhető, amíg van nála kölcsönzött könyv!`
+            );
+            return;
+        }
+
+        if (Borrower.registry.has(user)) {
+            Borrower.registry.delete(user);
+            console.log(`A ${user.id} felhasználó törölve a regisztrációból.`);
+        }
     }
 
     public listBorrowedBooks(): void {
-        //kidolgozni
+        console.log(`\n${this._id} (${this._name}) kölcsönzött könyvei:`);
+        if (this.borrowedBooks.size === 0) {
+            console.log('\nNincs kölcsönzött könyv.');
+            return;
+        }
+        for (const book of this.borrowedBooks) {
+            book.print();
+        }
     }
 
 }
