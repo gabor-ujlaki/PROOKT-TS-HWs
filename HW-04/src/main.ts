@@ -20,6 +20,9 @@ lib.addBook(book2);
 const user1 = Borrower.createUser('U-001', 'Teszt Elek', 'elek.teszt@example.com');
 const user2 = Borrower.createUser('U-002', 'Gipsz Jakab', 'jakab.gipsz@example.com');
 
+lib.registerBorrower(user1);
+lib.registerBorrower(user2);
+
 const loanManager = new LoanManager<Book>(lib);
 
 lib.listBooks();
