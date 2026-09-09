@@ -11,6 +11,13 @@ export class Borrower implements IBaseBorrower {
 
     private static registry: Set<Borrower> = new Set();
 
+    private constructor(id: string, name: string, mail: string) {
+        this._id = id;
+        this._name = name;
+        this._mail = mail;
+        Borrower.registry.add(this);
+    }
+
     public get id(): string {
         return this._id;
     }
@@ -31,11 +38,12 @@ export class Borrower implements IBaseBorrower {
         this._mail = newMail;
     }
 
-    private constructor(id: string, name: string, mail: string) {
-        this._id = id;
-        this._name = name;
-        this._mail = mail;
-        Borrower.registry.add(this);
+    public addBorrowedBook(book: Book): void {
+        this.borrowedBooks.add(book);
+    }
+
+    public removeBorrowedBook(book: Book): void {
+        this.borrowedBooks.delete(book);
     }
 
     @LogAction('Felhasználó létrehozva')
@@ -43,12 +51,13 @@ export class Borrower implements IBaseBorrower {
         return new Borrower(id, name, mail);
     }
 
-    public addBorrowedBook(book: Book): void {
-        this.borrowedBooks.add(book);
+    @LogAction('Felhasználó törlése')
+    public static destroyUser(user: Borrower): void {
+        //kidolgozni
     }
 
-    public removeBorrowedBook(book: Book): void {
-        this.borrowedBooks.delete(book);
+    public listBorrowedBooks(): void {
+        //kidolgozni
     }
 
 }

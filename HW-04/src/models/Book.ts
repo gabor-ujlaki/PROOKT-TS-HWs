@@ -47,7 +47,15 @@ export class Book implements IBaseBook {
     public set category(newCategory: Category | undefined) {
         this._category = newCategory;
     }
-    
+
+    public get status(): BookStatus {
+        return this._status;
+    }
+
+    public set status(newStatus: BookStatus) {
+        this._status = newStatus;
+    }
+
     @LogAction('Könyv létrehozva')
     public static createBook(
         id: string,
@@ -58,4 +66,12 @@ export class Book implements IBaseBook {
         return new Book(id, title, author, category);
     }
 
+    @LogAction('Könyv törlése')
+    public static destroyBook(book: Book): void {
+        //kidolgozni
+    }
+
+    public print(): void {
+        //kidolgozni
+    }
 }
