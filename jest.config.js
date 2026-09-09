@@ -22,7 +22,8 @@ module.exports = {
 testMatch: [
   '<rootDir>/HW-01/src/tests/**/*.test.ts',
   '<rootDir>/HW-02/src/tests/**/*.test.ts',
-  '<rootDir>/HW-03/src/tests/**/*.test.ts'
+  '<rootDir>/HW-03/src/tests/**/*.test.ts',
+  '<rootDir>/HW-04/src/tests/**/*.test.ts'
 ]
 
 };
