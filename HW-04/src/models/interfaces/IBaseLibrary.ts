@@ -1,4 +1,5 @@
 import { Book } from '../Book';
+import { Borrower } from '../Borrower';
 
 export enum BookStatus {
     AVAILABLE = 'available',
@@ -11,4 +12,5 @@ export interface IBaseLibrary {
     name: string;
 
     books: Map<string, Book>;
+    borrowers: Map<string, Borrower>;
 }

@@ -1,0 +1,47 @@
+import { IBaseBorrower } from './interfaces/IBaseBorrower';
+import { LogAction } from '../utils/decorators';
+import { BookStatus } from './interfaces/IBaseLibrary';
+import { Book } from './Book';
+
+export class Borrower implements IBaseBorrower {
+    private _id: string;
+    private _name: string;
+    private _mail: string;
+    private borrowedBooks: Set<Book> = new Set();
+
+    private static registry: Set<Borrower> = new Set();
+
+    public get id(): string {
+        return this._id;
+    }
+
+    public get name(): string {
+        return this._name;
+    }
+
+    public set name(newName: string) {
+        this._name = newName;
+    }
+
+    public get mail(): string {
+        return this._mail;
+    }
+
+    public set mail(newMail: string) {
+        this._mail = newMail;
+    }
+    
+    private constructor(id: string, name: string, mail: string) {
+        this._id = id;
+        this._name = name;
+        this._mail = mail;
+        Borrower.registry.add(this);
+    }
+
+    @LogAction('Felhasználó létrehozva')
+    public static createUser(id: string, name: string, mail: string): Borrower {
+        return new Borrower(id, name, mail);
+    }
+
+
+}
